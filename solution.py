@@ -1,5 +1,18 @@
 assignments = []
 
+rows = 'ABCDEFGHI'
+cols = '123456789'
+
+def cross(A, B):
+    "Cross product of elements in A and elements in B."
+    return [s + t for s in A for t in B]
+
+boxes = cross(rows, cols)
+row_units = [cross(r, cols) for r in rows]
+column_units = [cross(rows, c) for c in cols]
+square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
+unit_list = row_units + column_units + square_units
+
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -25,11 +38,30 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+    # for each unit (row, column or square)
+    for unit in unit_list:
+        naked_twin_set = set()
+        # for each box in that unit
+        for box_key in unit:
+            box_value = values[box_key]
+            # if the box has two possible values, find the other box in this unit which has identical values
+            if len(box_value) == 2:
+                naked_twins_keys = [keys for keys in unit if values[keys] == box_value]
+                # if there are two boxes in this unit which has identical two possible values
+                if len(naked_twins_keys) == 2:
+                    # it means we have found a naked twin
+                    # if the twin has not been found in this unit before
+                    if tuple(naked_twins_keys) not in naked_twin_set:
+                        naked_twin_set.add(tuple(naked_twins_keys))
+                        naked_twin_value_1 = values[naked_twins_keys[0]][0]
+                        naked_twin_value_2 = values[naked_twins_keys[0]][1]
+                        # Eliminate the naked twins as possibilities for their peers
+                        for peer_key in unit:
+                            if peer_key not in naked_twins_keys:
+                                values[peer_key] = values[peer_key].replace(naked_twin_value_1, '')
+                                values[peer_key] = values[peer_key].replace(naked_twin_value_2, '')
 
-def cross(A, B):
-    "Cross product of elements in A and elements in B."
-    pass
+    return values
 
 def grid_values(grid):
     """
@@ -49,7 +81,13 @@ def display(values):
     Args:
         values(dict): The sudoku in dictionary form
     """
-    pass
+    width = 1 + max(len(values[s]) for s in boxes)
+    line = '+'.join(['-' * (width * 3)] * 3)
+    for r in rows:
+        print(''.join(values[r + c].center(width) + ('|' if c in '36' else '')
+                      for c in cols))
+        if r in 'CF': print(line)
+    return
 
 def eliminate(values):
     pass
