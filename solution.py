@@ -40,26 +40,27 @@ def naked_twins(values):
     # Find all instances of naked twins
     # for each unit (row, column or square)
     for unit in unit_list:
+        # use a set to track the naked twin we have eliminated for this unit, so we don't eliminate the same twin twice
         naked_twin_set = set()
         # for each box in that unit
         for box_key in unit:
             box_value = values[box_key]
-            # if the box has two possible values, find the other box in this unit which has identical values
+            # if the box has two possible values, find the other box in this unit which has identical values and
+            # not eliminated in this unit before
             if len(box_value) == 2:
-                naked_twins_keys = [keys for keys in unit if values[keys] == box_value]
+                naked_twins_keys = [keys for keys in unit if keys not in naked_twin_set and values[keys] == box_value]
                 # if there are two boxes in this unit which has identical two possible values
                 if len(naked_twins_keys) == 2:
                     # it means we have found a naked twin
-                    # if the twin has not been found in this unit before
-                    if tuple(naked_twins_keys) not in naked_twin_set:
-                        naked_twin_set.add(tuple(naked_twins_keys))
-                        naked_twin_value_1 = values[naked_twins_keys[0]][0]
-                        naked_twin_value_2 = values[naked_twins_keys[0]][1]
-                        # Eliminate the naked twins as possibilities for their peers
-                        for peer_key in unit:
-                            if peer_key not in naked_twins_keys:
-                                values[peer_key] = values[peer_key].replace(naked_twin_value_1, '')
-                                values[peer_key] = values[peer_key].replace(naked_twin_value_2, '')
+                    naked_twin_set.add(naked_twins_keys[0])
+                    naked_twin_set.add(naked_twins_keys[1])
+                    naked_twin_value_1 = values[naked_twins_keys[0]][0]
+                    naked_twin_value_2 = values[naked_twins_keys[0]][1]
+                    # Eliminate the naked twins as possibilities for their peers
+                    for peer_key in unit:
+                        if peer_key not in naked_twins_keys:
+                            values[peer_key] = values[peer_key].replace(naked_twin_value_1, '')
+                            values[peer_key] = values[peer_key].replace(naked_twin_value_2, '')
 
     return values
 
