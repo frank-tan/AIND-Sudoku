@@ -5,15 +5,35 @@
 Q: How do we use constraint propagation to solve the naked twins problem?  
 A: Constraint propagation check for naked twins repeatedly until no further reduce can be achieved. 
 
-For each unit in the Sudoku provided, check if there are any two cells which have exactly the same two possible digits. If so, they are naked twins. And we will remove the two digits from all other boxes in this unit.
+Naked twins means in every unit of a Sudoku, if two boxes has identical two possible digits, those two digits has to be in the two boxes. It means no other boxes in the same unit can have those two digits. 
+
+Here are the details:
+
+Step 1: find all units in the Sudoku. It includes rows, columns, squares and two diagonal regions.
+
+Step 2: for each unit, go through all boxes. For each box, if there are two possible digits in it, check all other boxes in this unit and see if there is different box which has identical two possible values.
+
+Step 3: when a twin box is found, it means no other boxes in the unit should have the two digits in the naked twins. So we should go through all other boxes in the unit and remove the two digits from the possible values.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
 A: Constraint propagation applies Elimination and Only Choice repeatedly until the two processes cannot further reduce the possible solution. 
 
-In Elimination process, for every box which has only one possible digit, we remove the digit from all other boxes in all the units the box belongs to.
+Elimination: if a box has only one possible value, no other boxes in any unit the box belongs to should have that digit as a possible value. It can be achieved in the following steps:
 
-In Only Choice process, for every unit in the Sudoku, if a digit can only exit in one box, the box should be assigned that digit.
+Step 1: find all boxes which has only one possible values.
+
+Step 2: find all peers of this box, which includes rows, columns, squares and two diagonal regions.
+
+Step 3: for each all peer box, remove that digit from the possible values.
+
+Only Choice: for each unit in a Sudoku, it must have digits from 1 to 9. If a digit in a certain unit is only possible to be in one box, that box must have that digit as a solution. It can be achieved in the following steps:
+
+Step 1: for each unit in the Sudoku, for each digit 1 to 9, check the number of possible places the certain digits can be.
+
+Step 2: if the digits is only possible to be in one box, it means it must be in that box.
+
+Step 3: set the digit as the solved value for that box.
 
 ### Install
 
