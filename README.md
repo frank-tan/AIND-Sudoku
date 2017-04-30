@@ -19,6 +19,13 @@ Step 3: when a twin box is found, it means no other boxes in the unit should hav
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
 A: Constraint propagation applies Elimination and Only Choice repeatedly until the two processes cannot further reduce the possible solution. 
 
+Specifically to diagonal Sudoku, the constraints not only applies to row, columns and squares, but also two diagonal regions:
+
+* ['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8', 'I9'] and
+* ['A9', 'B8', 'C7', 'D6', 'E5', 'F4', 'G3', 'H2', 'I1']
+
+The diagonal regions apply to both Elimination process and Only Choice.
+
 Elimination: if a box has only one possible value, no other boxes in any unit the box belongs to should have that digit as a possible value. It can be achieved in the following steps:
 
 Step 1: find all boxes which has only one possible values.
