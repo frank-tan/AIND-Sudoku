@@ -14,8 +14,8 @@ square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','45
 diag_units = [['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8', 'I9'], ['A9', 'B8', 'C7', 'D6', 'E5', 'F4', 'G3', 'H2', 'I1']]
 unit_list = row_units + column_units + square_units
 diag_unit_list = row_units + column_units + square_units + diag_units
-diag_units = dict((s, [u for u in diag_unit_list if s in u]) for s in boxes)
-diag_peers = dict((s, set(sum(diag_units[s],[]))-set([s])) for s in boxes)
+diag_units_dict = dict((s, [u for u in diag_unit_list if s in u]) for s in boxes)
+diag_peers_dict = dict((s, set(sum(diag_units_dict[s],[]))-set([s])) for s in boxes)
 
 def assign_value(values, box, value):
     """
@@ -63,8 +63,8 @@ def naked_twins(values):
                     # Eliminate the naked twins as possibilities for their peers
                     for peer_key in unit:
                         if peer_key not in naked_twins_keys:
-                            values[peer_key] = values[peer_key].replace(naked_twin_value_1, '')
-                            values[peer_key] = values[peer_key].replace(naked_twin_value_2, '')
+                            assign_value(values, peer_key, values[peer_key].replace(naked_twin_value_1, ''))
+                            assign_value(values, peer_key, values[peer_key].replace(naked_twin_value_2, ''))
 
     return values
 
@@ -111,7 +111,7 @@ def eliminate(values):
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
     for box in solved_values:
         digit = values[box]
-        for peer in diag_peers[box]:
+        for peer in diag_peers_dict[box]:
             values[peer] = values[peer].replace(digit, '')
     return values
 
@@ -121,7 +121,7 @@ def only_choice(values):
     Input: A sudoku in dictionary form.
     Output: The resulting sudoku in dictionary form.
     """
-    for unit in unit_list:
+    for unit in diag_unit_list:
         for digit in '123456789':
             dplaces = [box for box in unit if digit in values[box]]
             if len(dplaces) == 1:
