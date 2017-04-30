@@ -3,11 +3,17 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: Constraint propagation check for naked twins repeatedly until no further reduce can be achieved. 
+
+For each unit in the Sudoku provided, check if there are any two cells which have exactly the same two possible digits. If so, they are naked twins. And we will remove the two digits from all other boxes in this unit.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: Constraint propagation applies Elimination and Only Choice repeatedly until the two processes cannot further reduce the possible solution. 
+
+In Elimination process, for every box which has only one possible digit, we remove the digit from all other boxes in all the units the box belongs to.
+
+In Only Choice process, for every unit in the Sudoku, if a digit can only exit in one box, the box should be assigned that digit.
 
 ### Install
 
